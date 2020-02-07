@@ -30,8 +30,9 @@ class cellConfig(Config):
 
     NUM_CLASSES = 2  # Background + cell
 
-    STEPS_PER_EPOCH = 45
-    VALIDATION_STEPS = 5
+    STEPS_PER_EPOCH = 100
+#    VALIDATION_STEPS = 10
+    VALIDATION_STEPS = 30
 
     # Don't exclude based on confidence. Since we have two classes
     # then 0.5 is the minimum anyway as it picks between nucleus and BG
@@ -40,18 +41,19 @@ class cellConfig(Config):
 
     # Backbone network architecture
     # Supported values are: resnet50, resnet101
-    #BACKBONE = "resnet50"
-    BACKBONE = "resnet101"
+    BACKBONE = "resnet50"
+#    BACKBONE = "resnet101"
 
     # Input image resizing
     # Random crops of size 512x512
     IMAGE_RESIZE_MODE = "crop"
     IMAGE_MIN_DIM = 512
-    IMAGE_MAX_DIM = 512
-    IMAGE_MIN_SCALE = 2.0
+    IMAGE_MAX_DIM = 1024
+    IMAGE_MIN_SCALE = 0
 
     # Length of square anchor side in pixels
-    RPN_ANCHOR_SCALES = (8, 16, 32, 64, 128)
+    #RPN_ANCHOR_SCALES = (8, 16, 32, 64, 128)
+    RPN_ANCHOR_SCALES = (32, 64, 128, 256, 512)
 
     # ROIs kept after non-maximum supression (training and inference)
     POST_NMS_ROIS_TRAINING = 1000
@@ -85,10 +87,12 @@ class cellConfig(Config):
 
     # Maximum number of ground truth instances to use in one image
     #MAX_GT_INSTANCES = 200
-    MAX_GT_INSTANCES = 500
+    #MAX_GT_INSTANCES = 500
+    MAX_GT_INSTANCES = 50
     # Max number of final detections per image
     #DETECTION_MAX_INSTANCES = 400
-    DETECTION_MAX_INSTANCES = 1000
+    #DETECTION_MAX_INSTANCES = 1000
+    DETECTION_MAX_INSTANCES = 100
 
 class Logger(object):
 	def __init__(self):
@@ -136,7 +140,7 @@ class cellDataset(utils.Dataset):
         info = self.image_info[image_id]
 
         mask_dir = os.path.dirname(info['path'])
-        mask_path = os.path.join(mask_dir, 'instances_ids.png')
+        mask_path = os.path.join(mask_dir, 'instance_ids.png')
 
         ids_mask = cv2.imread(mask_path, 0)
         instances_num = len(np.unique(ids_mask)) - 1
@@ -185,7 +189,7 @@ def train(model, config, train_dir, val_dir):
     model.train(train_dataset, val_dataset,
                 learning_rate=config.LEARNING_RATE,
                 #learning_rate = 0.01,
-                epochs=100,
+                epochs=150, # 100,
                 augmentation=augmentation,
                 layers='heads')
     
@@ -193,7 +197,7 @@ def train(model, config, train_dir, val_dir):
     model.train(train_dataset, val_dataset,
                 learning_rate=config.LEARNING_RATE,
                 #learning_rate = 0.1,
-                epochs=200,
+                epochs=600, # 200,
                 augmentation=augmentation,
                 layers='all')
 
@@ -208,14 +212,24 @@ def main():
     # weights_path = args['--weights']
     sys.stdout = Logger()
     #define the path to the train directory containing instance_ids.png and raw.tif
-    train_dir = "/home/davince/Dropbox (OIST)/Deeplearning_system/Mask-RCNN_OIST/train/"
-    #define the path to the validation directory containing instance_ids.png and raw.tif
-    val_dir = "/home/davince/Dropbox (OIST)/Deeplearning_system/Mask-RCNN_OIST/val/"
-    #define the path to the directory that output trained weights should be saved
-    out_dir = "/home/davince/Dropbox (OIST)/Deeplearning_system/Mask-RCNN_OIST/trainednetwork/"
-    #define the path of pretrained weight to start from
-    weights_path = '/home/davince/Dropbox (OIST)/Deeplearning_system/Mask-RCNN_OIST/trainednetwork/mask_rcnn_nuclei_new.h5'
+#    train_dir = "/home/davince/Dropbox (OIST)/Deeplearning_system/Mask-RCNN_OIST/train/"
+#    train_dir = "/home/egomez/Documents/DEEPLEARNING/data/train/"
+    train_dir = "/home/egomez/Documents/DEEPLEARNING/data/mix_10x_20x/train/"
+#    train_dir = "/home/egomez/Documents/DEEPLEARNING/Mask_RCNN_PH/usiigaci/Mask R-CNN/train/"
 
+    #define the path to the validation directory containing instance_ids.png and raw.tif
+#    val_dir = "/home/davince/Dropbox (OIST)/Deeplearning_system/Mask-RCNN_OIST/val/"
+#    val_dir = "/home/egomez/Documents/DEEPLEARNING/data/val/"
+    val_dir = "/home/egomez/Documents/DEEPLEARNING/data/mix_10x_20x/val/"
+#    val_dir = "/home/egomez/Documents/DEEPLEARNING/Mask_RCNN_PH/usiigaci/Mask R-CNN/val/"
+
+    #define the path to the directory that output trained weights should be saved
+#    out_dir = "/home/davince/Dropbox (OIST)/Deeplearning_system/Mask-RCNN_OIST/trainednetwork/"
+    out_dir = "/home/egomez/Documents/DEEPLEARNING/trained_network_10x20x/"
+    #define the path of pretrained weight to start from
+#    weights_path = '/home/davince/Dropbox (OIST)/Deeplearning_system/Mask-RCNN_OIST/trainednetwork/mask_rcnn_nuclei_new.h5'
+#    weights_path = "/home/egomez/Documents/DEEPLEARNING/Mask_RCNN/mask_rcnn_coco.h5"
+    weights_path = "/home/egomez/Documents/DEEPLEARNING/trained_network_10x20x/cell20190531T1551/mask_rcnn_cell_0150.h5"
     print('> Training on data: ', train_dir)
     print('> Saving results to: ', out_dir)
 
