@@ -17,20 +17,26 @@ import os
 #sys.path.append("/home/egomez/miniconda3/envs/mask_rcnn/lib/python3.6/site-packages/")
 
 # path to the data directory which contains folders such as train, val or test
-PATH = "/home/egomez/Documents/data/"
+# PATH = "/home/egomez/Documents/data/"
+PATH = sys.argv[1]
 # subfolder in which the input and ground truth are
 mode = 'test/'
 
 # Old data
-# name of the folder containing ground truth
-PATH2GT = PATH + mode + 'tracking_test/'
+
 # name of the folder containing the input videos
 PATH2DATA = PATH + mode + "input_test/"
+PATH2DATA = PATH + mode + sys.argv[2]
+
+# name of the folder containing ground truth
+PATH2GT = PATH + mode + 'tracking_test/'
+PATH2GT = PATH + mode + sys.argv[3]
+
 # Ground truth's name has a different ending. Write it so as to get the correct
 # name of the input file
-#END = "_Segmentation2im_Prot"
-END = '_Segmentationim-label'
-
+# END = "_Segmentation2im_Prot"
+# END = '_Segmentationim-label'
+END = sys.argv[4]
 
 # New data
 # directory in which new files should be saved

@@ -214,18 +214,20 @@ def main():
     #define the path to the train directory containing instance_ids.png and raw.tif
 #    train_dir = "/home/davince/Dropbox (OIST)/Deeplearning_system/Mask-RCNN_OIST/train/"
 #    train_dir = "/home/egomez/Documents/DEEPLEARNING/data/train/"
-    train_dir = "/home/egomez/Documents/DEEPLEARNING/data/mix_10x_20x/train/"
+#     train_dir = "/home/egomez/Documents/DEEPLEARNING/data/mix_10x_20x/train/"
+    train_dir = "/home/egomez/Documents/data/train/usiigaci/"
 #    train_dir = "/home/egomez/Documents/DEEPLEARNING/Mask_RCNN_PH/usiigaci/Mask R-CNN/train/"
 
     #define the path to the validation directory containing instance_ids.png and raw.tif
 #    val_dir = "/home/davince/Dropbox (OIST)/Deeplearning_system/Mask-RCNN_OIST/val/"
 #    val_dir = "/home/egomez/Documents/DEEPLEARNING/data/val/"
-    val_dir = "/home/egomez/Documents/DEEPLEARNING/data/mix_10x_20x/val/"
+#      val_dir = "/home/egomez/Documents/DEEPLEARNING/data/mix_10x_20x/val/"
+    val_dir = train_dir
 #    val_dir = "/home/egomez/Documents/DEEPLEARNING/Mask_RCNN_PH/usiigaci/Mask R-CNN/val/"
 
     #define the path to the directory that output trained weights should be saved
 #    out_dir = "/home/davince/Dropbox (OIST)/Deeplearning_system/Mask-RCNN_OIST/trainednetwork/"
-    out_dir = "/home/egomez/Documents/DEEPLEARNING/trained_network_10x20x/"
+    out_dir = "/home/egomez/Documents/DEEPLEARNING/new_training/"
     #define the path of pretrained weight to start from
 #    weights_path = '/home/davince/Dropbox (OIST)/Deeplearning_system/Mask-RCNN_OIST/trainednetwork/mask_rcnn_nuclei_new.h5'
 #    weights_path = "/home/egomez/Documents/DEEPLEARNING/Mask_RCNN/mask_rcnn_coco.h5"

@@ -11,25 +11,34 @@ import numpy as np
 import glob
 import SimpleITK as sitk
 import os
+import sys
+
+
 
 # To find local version
 #import sys
 #sys.path.append("/home/egomez/miniconda3/envs/mask_rcnn/lib/python3.6/site-packages/")
 
 # path to the data directory which contains folders such as train, val or test
-PATH = "/home/egomez/Documents/data/"
+# PATH = "/home/egomez/Documents/data/"
+PATH = sys.argv[1]
+
 # subfolder in which the input and ground truth are
 mode = 'train/'
 
 # Old data
-# name of the folder containing ground truth
-PATH2GT = PATH + mode + 'train_labels/'
 # name of the folder containing the input videos
-PATH2DATA = PATH + mode + "input_train/"
+# PATH2DATA = PATH + mode + "input_train/"
+PATH2DATA = PATH + mode + sys.argv[2]
+# name of the folder containing ground truth
+# PATH2GT = PATH + mode + 'train_labels/'
+PATH2GT = PATH + mode + sys.argv[3]
+
 # Ground truth's name has a different ending. Write it so as to get the correct
 # name of the input file
 #END = "_Segmentation2im_Prot"
-END = '_Segmentationim-label'
+# END = '_Segmentationim-label'
+END = sys.argv[4]
 
 # New data
 # directory in which new files should be saved
@@ -45,6 +54,11 @@ input_names = '/raw.tif'
 FILES = glob.glob(PATH2GT+'/*.tif')
 #COUNT = 1
 COUNT = 1
+
+
+
+    
+    
 for file in FILES:
     # Load masks from segmented videos
     file_name = file
@@ -66,7 +80,9 @@ for file in FILES:
     
     for i in range(masks.shape[0]):
         # make a new directory called set
-        os.makedirs(PATH2OUTPUT + NEW_FOLDER_NAME + np.str(COUNT))
+        if not os.path.exists(PATH2OUTPUT + NEW_FOLDER_NAME + np.str(COUNT)):
+            os.makedirs(PATH2OUTPUT + NEW_FOLDER_NAME + np.str(COUNT))
+
         aux = masks[i]
         aux = aux.astype(np.uint8)
         number = np.str(i)
