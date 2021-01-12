@@ -140,7 +140,7 @@ class cellDataset(utils.Dataset):
         info = self.image_info[image_id]
 
         mask_dir = os.path.dirname(info['path'])
-        mask_path = os.path.join(mask_dir, 'instance_ids.png')
+        mask_path = os.path.join(mask_dir, 'instances_ids.png')
 
         ids_mask = cv2.imread(mask_path, 0)
         instances_num = len(np.unique(ids_mask)) - 1
