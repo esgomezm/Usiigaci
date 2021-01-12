@@ -25,18 +25,16 @@ mode = 'test/'
 # Old data
 
 # name of the folder containing the input videos
-PATH2DATA = PATH + mode + "input_test/"
-PATH2DATA = PATH + mode + sys.argv[2]
+PATH2DATA = os.path.join(PATH, sys.argv[2])
 
 # name of the folder containing ground truth
-PATH2GT = PATH + mode + 'tracking_test/'
-PATH2GT = PATH + mode + sys.argv[3]
+PATH2GT = os.path.join(PATH, sys.argv[3])
 
 # Ground truth's name has a different ending. Write it so as to get the correct
 # name of the input file
 # END = "_Segmentation2im_Prot"
 # END = '_Segmentationim-label'
-END = sys.argv[4]
+# END = sys.argv[4]
 
 # New data
 # directory in which new files should be saved
@@ -66,16 +64,18 @@ for file in FILES:
     masks = sitk.GetArrayFromImage(masks)
     
     # Load original images corresponding to masks.
-    file_name = file_name.split('/')[-1].split('.')[0]
+    # file_name = file_name.split('/')[-1].split('.')[0]
+    file_name = file_name.split('/')[-1]
     
     # Option 1 for the input names
-    time_range = file_name[:-len(END)].split('_')[-1]
-    image_name = file_name[:-(len(END+time_range))] + 'stackreg_'+time_range+'.tif'
+    # time_range = file_name[:-len(END)].split('_')[-1]
+    # image_name = file_name[:-(len(END+time_range))] + 'stackreg_'+time_range+'.tif'
     
     # Option 2 for the input names
     # image_name = file_name[:-(len(END))] + '.tif'
 
-    image = sitk.ReadImage(PATH2DATA +image_name)
+    # image = sitk.ReadImage(PATH2DATA +image_name)
+    image = sitk.ReadImage(PATH2DATA +file_name)
     image = sitk.GetArrayFromImage(image)
     print(image_name)
     COUNT = 0
