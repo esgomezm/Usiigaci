@@ -29,10 +29,13 @@ mode = 'train/'
 # Old data
 # name of the folder containing the input videos
 # PATH2DATA = PATH + mode + "input_train/"
-PATH2DATA = PATH + mode + sys.argv[2]
+# PATH2DATA = PATH + mode + sys.argv[2]
+PATH2DATA = os.path.join(PATH, sys.argv[2])
+
 # name of the folder containing ground truth
 # PATH2GT = PATH + mode + 'train_labels/'
-PATH2GT = PATH + mode + sys.argv[3]
+# PATH2GT = PATH + mode + sys.argv[3]
+PATH2GT = os.path.join(PATH, sys.argv[3])
 
 # Ground truth's name has a different ending. Write it so as to get the correct
 # name of the input file
