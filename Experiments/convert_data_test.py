@@ -42,7 +42,7 @@ PATH2OUTPUT = PATH + mode + 'usiigaci/'
 PATH2OUTPUT_MASK = PATH2OUTPUT + 'mask/'
 PATH2OUTPUT_IINPUT = PATH2OUTPUT + 'input/'
 # name of the new ground truth (specified by usiigaci)
-masks_names = 'instance_ids%03d'
+masks_names = 'instances_ids%03d'
 # name of the new input slice (specified by Usiigaci)
 input_names = 'video%03d'
 input_names_time = 't%03d'
