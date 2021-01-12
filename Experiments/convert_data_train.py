@@ -49,7 +49,7 @@ PATH2OUTPUT = PATH + mode + 'usiigaci/'
 # name of the new folder
 NEW_FOLDER_NAME = 'set'
 # name of the new ground truth (specified by usiigaci)
-masks_names = '/instance_ids.png'
+masks_names = '/instances_ids.png'
 # name of the new input slice (specified by Usiigaci)
 input_names = '/raw.tif'
 
