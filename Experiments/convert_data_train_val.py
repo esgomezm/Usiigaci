@@ -38,7 +38,7 @@ PATH2GT = PATH + mode + sys.argv[3]
 # name of the input file
 #END = "_Segmentation2im_Prot"
 # END = '_Segmentationim-label'
-END = sys.argv[4]
+# END = sys.argv[4]
 
 # New data
 # directory in which new files should be saved
@@ -52,12 +52,7 @@ input_names = '/raw.tif'
 
 
 FILES = glob.glob(PATH2GT+'/*.tif')
-#COUNT = 1
-COUNT = 1
-
-
-
-    
+COUNT = 1   
     
 for file in FILES:
     # Load masks from segmented videos
@@ -66,16 +61,18 @@ for file in FILES:
     masks = sitk.GetArrayFromImage(masks)
     
     # Load original images corresponding to masks.
-    file_name = file_name.split('/')[-1].split('.')[0]
+    # file_name = file_name.split('/')[-1].split('.')[0]
+    file_name = file_name.split('/')[-1]
     
     # Option 1 for the input names
-    time_range = file_name[:-len(END)].split('_')[-1]
-    image_name = file_name[:-(len(END+time_range))] + 'stackreg_'+time_range+'.tif'
+    # time_range = file_name[:-len(END)].split('_')[-1]
+    # image_name = file_name[:-(len(END+time_range))] + 'stackreg_'+time_range+'.tif'
     
     # Option 2 for the input names
     # image_name = file_name[:-(len(END))] + '.tif'
     
-    image = sitk.ReadImage(PATH2DATA +image_name)
+    # image = sitk.ReadImage(PATH2DATA +image_name)
+    image = sitk.ReadImage(PATH2DATA +file_name)
     image = sitk.GetArrayFromImage(image)
     
     for i in range(masks.shape[0]):
