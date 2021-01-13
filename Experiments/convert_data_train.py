@@ -1,103 +1,52 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Created on Wed Jul 17 10:45:15 2019
 
 @author: E. Gómez de Mariscal
 GitHub username: esgomezm
 """
-
 import numpy as np
-import glob
-import SimpleITK as sitk
+from PIL import Image 
 import os
 import sys
-
-
-
-# To find local version
-#import sys
-#sys.path.append("/home/egomez/miniconda3/envs/mask_rcnn/lib/python3.6/site-packages/")
-
 # path to the data directory which contains folders such as train, val or test
-# PATH = "/home/egomez/Documents/data/"
 PATH = sys.argv[1]
-
 # subfolder in which the input and ground truth are
 mode = 'train/'
-
-# Old data
 # name of the folder containing the input videos
-# PATH2DATA = PATH + mode + "input_train/"
-# PATH2DATA = PATH + mode + sys.argv[2]
 PATH2DATA = os.path.join(PATH, sys.argv[2])
-
 # name of the folder containing ground truth
-# PATH2GT = PATH + mode + 'train_labels/'
-# PATH2GT = PATH + mode + sys.argv[3]
 PATH2GT = os.path.join(PATH, sys.argv[3])
-
-# Ground truth's name has a different ending. Write it so as to get the correct
-# name of the input file
-#END = "_Segmentation2im_Prot"
-# END = '_Segmentationim-label'
-# END = sys.argv[4]
-
 # New data
 # directory in which new files should be saved
-PATH2OUTPUT = PATH + mode + 'usiigaci/'
+if not os.path.exists(sys.argv[4]):
+  os.mkdir(sys.argv[4])
+
+PATH2OUTPUT = os.path.join(sys.argv[4], 'usiigaci/')
+if not os.path.exists(PATH2OUTPUT):
+  os.mkdir(PATH2OUTPUT)
+  
 # name of the new folder
-NEW_FOLDER_NAME = 'set'
+NEW_FOLDER_NAME = 'set{}'
 # name of the new ground truth (specified by usiigaci)
-masks_names = '/instances_ids.png'
+masks_names = 'instances_ids.png'
 # name of the new input slice (specified by Usiigaci)
-input_names = '/raw.tif'
+input_names = 'raw.tif'
 
-
-FILES = glob.glob(PATH2GT+'/*.tif')
+FILES = os.listdir(PATH2GT)
 COUNT = 1   
-    
+print('Updating image format...')    
 for file in FILES:
     # Load masks from segmented videos
-    file_name = file
-    masks = sitk.ReadImage(file_name)
-    masks = sitk.GetArrayFromImage(masks)
+    masks = Image.open(os.path.join(PATH2GT, file))
+    image = Image.open(os.path.join(PATH2DATA, file))
     
-    # Load original images corresponding to masks.
-    # file_name = file_name.split('/')[-1].split('.')[0]
-    file_name = file_name.split('/')[-1]
-    
-    # Option 1 for the input names
-    # time_range = file_name[:-len(END)].split('_')[-1]
-    # image_name = file_name[:-(len(END+time_range))] + 'stackreg_'+time_range+'.tif'
-    
-    # Option 2 for the input names
-    # image_name = file_name[:-(len(END))] + '.tif'
-    
-    # image = sitk.ReadImage(PATH2DATA +image_name)
-    image = sitk.ReadImage(PATH2DATA +file_name)
-    image = sitk.GetArrayFromImage(image)
-    
-    for i in range(masks.shape[0]):
-        # make a new directory called set
-        if not os.path.exists(PATH2OUTPUT + NEW_FOLDER_NAME + np.str(COUNT)):
-            os.makedirs(PATH2OUTPUT + NEW_FOLDER_NAME + np.str(COUNT))
+    if not os.path.exists(os.path.join(PATH2OUTPUT, NEW_FOLDER_NAME + np.str(COUNT))):
+        os.makedirs(PATH2OUTPUT + NEW_FOLDER_NAME + np.str(COUNT))
+    SET_PATH = os.path.join(PATH2OUTPUT, NEW_FOLDER_NAME.format(COUNT))
 
-        aux = masks[i]
-        aux = aux.astype(np.uint8)
-        number = np.str(i)
-        sitk.WriteImage(sitk.GetImageFromArray(aux), PATH2OUTPUT + 
-                        NEW_FOLDER_NAME + np.str(COUNT) + masks_names)
-        
-        aux = image[i]
-        aux = aux.astype(np.uint16)
-        number = np.str(i)
-        sitk.WriteImage(sitk.GetImageFromArray(aux), PATH2OUTPUT + 
-                        NEW_FOLDER_NAME + np.str(COUNT) + input_names)
+    masks.save(os.path.join(SET_PATH, masks_names))
+   
+    image.save(os.path.join(SET_PATH, input_names))
 
-        COUNT = COUNT + 1
-        
-        
-        
-        
-  
+    COUNT = COUNT + 1
+print('Process finished')
