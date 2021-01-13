@@ -40,9 +40,9 @@ for file in FILES:
     masks = Image.open(os.path.join(PATH2GT, file))
     image = Image.open(os.path.join(PATH2DATA, file))
     
-    if not os.path.exists(os.path.join(PATH2OUTPUT, NEW_FOLDER_NAME + np.str(COUNT))):
-        os.makedirs(PATH2OUTPUT + NEW_FOLDER_NAME + np.str(COUNT))
     SET_PATH = os.path.join(PATH2OUTPUT, NEW_FOLDER_NAME.format(COUNT))
+    if not os.path.exists(SET_PATH):
+        os.makedirs(SET_PATH)
 
     masks.save(os.path.join(SET_PATH, masks_names))
    
