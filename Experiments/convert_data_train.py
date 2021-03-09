@@ -33,20 +33,44 @@ masks_names = 'instances_ids.png'
 input_names = 'raw.tif'
 
 FILES = os.listdir(PATH2GT)
+
 COUNT = 1   
 print('Updating image format...')    
 for file in FILES:
     # Load masks from segmented videos
-    masks = Image.open(os.path.join(PATH2GT, file))
+    masks = Image.open(os.path.join(PATH2GT, file))    
     image = Image.open(os.path.join(PATH2DATA, file))
-    
-    SET_PATH = os.path.join(PATH2OUTPUT, NEW_FOLDER_NAME.format(COUNT))
-    if not os.path.exists(SET_PATH):
-        os.makedirs(SET_PATH)
+    if masks.size[0]<512:
+        # Add pixels to the image to fit the same size
+        mask_aux = np.zeros((512,512), dtype=np.uint8)
+        image_aux = np.zeros((512,512), dtype=np.uint16)
+        mask_aux[:mask.size[0], mask.size[0]] = np.asarray(masks)
+        image_aux[:mask.size[0], mask.size[0]] = np.asarray(image)
+        masks = Image(mask_aux)
+        image = Image(image_aux)
+        # Save the images
+        SET_PATH = os.path.join(PATH2OUTPUT, NEW_FOLDER_NAME.format(COUNT))
+        if not os.path.exists(SET_PATH):
+            os.makedirs(SET_PATH)
 
-    masks.save(os.path.join(SET_PATH, masks_names))
-   
-    image.save(os.path.join(SET_PATH, input_names))
+        masks.save(os.path.join(SET_PATH, masks_names))
+        
+        image.save(os.path.join(SET_PATH, input_names))
+        COUNT = COUNT + 1
+    else:
+        it = np.floor(masks.size[0]/512)
+        for i in range(it): 
+            for j in range(it):         
+                SET_PATH = os.path.join(PATH2OUTPUT, NEW_FOLDER_NAME.format(COUNT))
+                if not os.path.exists(SET_PATH):
+                    os.makedirs(SET_PATH)
+                masks_aux = masks.crop(512*i:512*(i+1),512*j:512*(j+1))
+                image_aux = image.crop(512*i:512*(i+1),512*j:512*(j+1))
 
-    COUNT = COUNT + 1
+                masks_aux.save(os.path.join(SET_PATH, masks_names))
+              
+                image_aux.save(os.path.join(SET_PATH, input_names))
+                
+                COUNT = COUNT + 1
+
 print('Process finished')
