@@ -44,10 +44,10 @@ for file in FILES:
         # Add pixels to the image to fit the same size
         mask_aux = np.zeros((512,512), dtype=np.uint8)
         image_aux = np.zeros((512,512), dtype=np.uint16)
-        mask_aux[:mask.size[0], mask.size[0]] = np.asarray(masks)
-        image_aux[:mask.size[0], mask.size[0]] = np.asarray(image)
-        masks = Image(mask_aux)
-        image = Image(image_aux)
+        mask_aux[:masks.size[0], :masks.size[1]] = np.asarray(masks)
+        image_aux[:masks.size[0], :masks.size[1]] = np.asarray(image)
+        masks = Image.fromarray(mask_aux)
+        image = Image.fromarray(image_aux)
         # Save the images
         SET_PATH = os.path.join(PATH2OUTPUT, NEW_FOLDER_NAME.format(COUNT))
         if not os.path.exists(SET_PATH):
@@ -58,15 +58,15 @@ for file in FILES:
         image.save(os.path.join(SET_PATH, input_names))
         COUNT = COUNT + 1
     else:
-        it = np.floor(masks.size[0]/512)
+        it = np.int(np.floor(masks.size[0]/512))
         for i in range(it): 
             for j in range(it):         
                 SET_PATH = os.path.join(PATH2OUTPUT, NEW_FOLDER_NAME.format(COUNT))
                 if not os.path.exists(SET_PATH):
-                    os.makedirs(SET_PATH)
-                masks_aux = masks.crop(512*i:512*(i+1),512*j:512*(j+1))
-                image_aux = image.crop(512*i:512*(i+1),512*j:512*(j+1))
-
+                    os.makedirs(SET_PATH)               
+                
+                masks_aux = masks.crop((512*i, 512*j, 512*(i+1), 512*(j+1)))
+                image_aux = image.crop((512*i, 512*j, 512*(i+1), 512*(j+1)))
                 masks_aux.save(os.path.join(SET_PATH, masks_names))
               
                 image_aux.save(os.path.join(SET_PATH, input_names))
